@@ -1,6 +1,11 @@
 import ctypes
 
-_cbasic = ctypes.CDLL('cbasic.so')
+def get_library_path():
+    for f in __loader__.contents():
+        if f.endswith('.so'):
+            return __loader__.resource_path(f)
+
+_cbasic = ctypes.CDLL(get_library_path())
 _cbasic.cfunction.argtypes = (ctypes.c_uint8)
 
 class basic:
@@ -14,9 +19,3 @@ class basic:
 		_cbasic.cfunction(5)
 
 		print("B")
-
-"""
-_geohash = ctypes.CDLL('libgeohash.so')
-_geohash.geohash_fast_encode.argtypes = (GeoHashRange, GeoHashRange, ctypes.c_double, ctypes.c_double, ctypes.c_uint8,
-                                         ctypes.POINTER(GeoHashBits))
-"""
